@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
       ease: 'power3.out'
     });
 
-    gsap.from('.hero-content .button-group', {
+    gsap.from('.hero-content .cta-group', {
       opacity: 0,
       y: 30,
       duration: 1,
@@ -47,10 +47,10 @@ document.addEventListener('DOMContentLoaded', () => {
   initialAnimations();
 
   // Section animations
-  const sections = ['#benefits', '#use-cases', '#how-it-works', '#api', '#pricing'];
+  const sectionIds = ['#benefits', '#use-cases', '#how-it-works', '#api', '#pricing'];
   
-  sections.forEach(section => {
-    // Heading animations with refined trigger points
+  sectionIds.forEach(section => {
+    // Heading animations
     gsap.from(`${section} h2`, {
       scrollTrigger: {
         trigger: section,
@@ -87,119 +87,99 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Improved smooth scroll navigation
+  // Prevent logo click from scrolling
+  document.querySelector('.logo-link').addEventListener('click', (e) => {
+    e.preventDefault();
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  });
+
+  // Smooth scroll navigation with centered sections
   document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function(e) {
       e.preventDefault();
       const targetId = this.getAttribute('href');
+      
+      // Don't process if it's the logo
+      if (this.closest('.logo-link')) {
+        return;
+      }
+
       const target = document.querySelector(targetId);
       
       if (target) {
-        // Get target's position
+        const windowHeight = window.innerHeight;
+        const sectionHeight = target.offsetHeight;
         const targetPosition = target.getBoundingClientRect().top + window.pageYOffset;
-        const startPosition = window.pageYOffset;
-        const distance = targetPosition - startPosition;
         
-        // Only scroll smoothly if we're not very close to the target
-        if (Math.abs(distance) > window.innerHeight * 0.3) {
-          gsap.to(window, {
-            duration: 1,
-            scrollTo: {
-              y: targetPosition - 80,
-              autoKill: false
-            },
-            ease: 'power2.inOut'
-          });
-        } else {
-          // If we're close, just jump to the position
-          window.scrollTo({
-            top: targetPosition - 80,
-            behavior: 'smooth'
-          });
-        }
+        // Calculate position to center the section
+        const centerPosition = targetPosition - (windowHeight / 2) + (sectionHeight / 2);
+        
+        gsap.to(window, {
+          duration: 1,
+          scrollTo: {
+            y: centerPosition,
+            autoKill: false
+          },
+          ease: 'power2.inOut'
+        });
       }
     });
   });
 
-  // Smooth scroll resistance with proximity-based snap
+  // Enhanced scroll behavior with centered snapping
   let isScrolling;
-  let lastScrollTop = window.pageYOffset;
-  const sections = document.querySelectorAll('section');
-  
-  window.addEventListener('wheel', (e) => {
-    clearTimeout(isScrolling);
+  const sectionElements = document.querySelectorAll('section');
+  let lastScrollPosition = window.pageYOffset;
+  let scrollTimeout;
+
+  window.addEventListener('scroll', () => {
+    clearTimeout(scrollTimeout);
     
-    const currentScroll = window.pageYOffset;
-    const scrollDirection = e.deltaY > 0 ? 1 : -1;
-    
-    // Find the closest section
-    let closestSection = null;
-    let closestDistance = Infinity;
-    
-    sections.forEach(section => {
-      const rect = section.getBoundingClientRect();
-      const distance = Math.abs(rect.top);
+    scrollTimeout = setTimeout(() => {
+      const currentPosition = window.pageYOffset;
+      const windowHeight = window.innerHeight;
       
-      if (distance < closestDistance) {
-        closestDistance = distance;
-        closestSection = section;
-      }
-    });
-    
-    // If we're very close to a section (within 100px)
-    if (closestDistance < 100) {
-      const targetPosition = closestSection.offsetTop - 80;
-      gsap.to(window, {
-        duration: 0.3,
-        scrollTo: {
-          y: targetPosition,
-          autoKill: false
-        },
-        ease: 'power2.out'
-      });
-    } else {
-      // Normal smooth scroll
-      const delta = e.deltaY * 0.5;
-      gsap.to(window, {
-        duration: 0.5,
-        scrollTo: {
-          y: currentScroll + delta,
-          autoKill: false
-        },
-        ease: 'power2.out'
-      });
-    }
-    
-    lastScrollTop = currentScroll;
-    
-    isScrolling = setTimeout(() => {
-      // After scrolling ends, snap to nearest section if we're close
-      const finalPosition = window.pageYOffset;
+      // Find the closest section
       let closestSection = null;
       let closestDistance = Infinity;
       
-      sections.forEach(section => {
-        const distance = Math.abs(section.offsetTop - finalPosition - 80);
-        if (distance < closestDistance && distance < window.innerHeight * 0.2) {
+      sectionElements.forEach(section => {
+        const sectionTop = section.offsetTop;
+        const sectionHeight = section.offsetHeight;
+        const sectionCenter = sectionTop + (sectionHeight / 2);
+        const scrollCenter = currentPosition + (windowHeight / 2);
+        const distance = Math.abs(scrollCenter - sectionCenter);
+        
+        // Only consider sections that are within 150px of current position
+        if (distance < closestDistance && distance < 150) {
           closestDistance = distance;
           closestSection = section;
         }
       });
       
+      // If we're close to a section, smoothly snap to center it
       if (closestSection) {
+        const sectionHeight = closestSection.offsetHeight;
+        const centerPosition = closestSection.offsetTop - (windowHeight / 2) + (sectionHeight / 2);
+        
         gsap.to(window, {
-          duration: 0.3,
+          duration: 0.5,
           scrollTo: {
-            y: closestSection.offsetTop - 80,
+            y: centerPosition,
             autoKill: false
           },
           ease: 'power2.out'
         });
       }
+      
+      lastScrollPosition = currentPosition;
     }, 150);
   }, { passive: true });
 
-  // Touch handling for mobile
+  // Touch handling for mobile with reduced sensitivity
   let touchStartY = 0;
   let touchEndY = 0;
 
@@ -210,15 +190,13 @@ document.addEventListener('DOMContentLoaded', () => {
   document.addEventListener('touchmove', (e) => {
     touchEndY = e.touches[0].clientY;
     const delta = touchStartY - touchEndY;
+    
+    // Reduce sensitivity for smoother scrolling
     const modified = delta * 0.5;
     
-    gsap.to(window, {
-      duration: 0.5,
-      scrollTo: {
-        y: window.pageYOffset + modified,
-        autoKill: false
-      },
-      ease: 'power2.out'
+    window.scrollBy({
+      top: modified,
+      behavior: 'smooth'
     });
     
     touchStartY = touchEndY;
