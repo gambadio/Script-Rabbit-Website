@@ -421,7 +421,8 @@
     
     .footer-brand img {
     height: 48px;
-    width: auto;
+    width: 50px;
+    height: 50px;
     }
     
     .footer-brand span {

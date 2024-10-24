@@ -18,6 +18,48 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
+  // Subtle logo text wobble animation
+  const logoText = document.querySelector('.logo-link span');
+  const wobbleTimeline = gsap.timeline({
+    repeat: -1,
+    repeatDelay: 4
+  });
+
+  wobbleTimeline
+    .to(logoText, {
+      duration: 0.3,
+      rotateY: 2,
+      scale: 1.02,
+      ease: "sine.inOut"
+    })
+    .to(logoText, {
+      duration: 0.3,
+      rotateY: -2,
+      scale: 1.01,
+      ease: "sine.inOut"
+    })
+    .to(logoText, {
+      duration: 0.3,
+      rotateY: 1,
+      scale: 1.015,
+      ease: "sine.inOut"
+    })
+    .to(logoText, {
+      duration: 0.3,
+      rotateY: -1,
+      scale: 1.005,
+      ease: "sine.inOut"
+    })
+    .to(logoText, {
+      duration: 0.3,
+      rotateY: 0,
+      scale: 1,
+      ease: "sine.inOut"
+    });
+
+  logoText.style.transformStyle = "preserve-3d";
+  logoText.style.perspective = "1000px";
+
   // Initial animations
   const initialAnimations = () => {
     gsap.from('.hero-content h1', {
@@ -102,7 +144,6 @@ document.addEventListener('DOMContentLoaded', () => {
       e.preventDefault();
       const targetId = this.getAttribute('href');
       
-      // Don't process if it's the logo
       if (this.closest('.logo-link')) {
         return;
       }
@@ -113,8 +154,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const windowHeight = window.innerHeight;
         const sectionHeight = target.offsetHeight;
         const targetPosition = target.getBoundingClientRect().top + window.pageYOffset;
-        
-        // Calculate position to center the section
         const centerPosition = targetPosition - (windowHeight / 2) + (sectionHeight / 2);
         
         gsap.to(window, {
@@ -130,12 +169,15 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // Enhanced scroll behavior with centered snapping
-  let isScrolling;
+  let isSnapping = false;
+  let snapCooldown = 1000; // 1 second cooldown
+  let lastSnappedSection = null;
   const sectionElements = document.querySelectorAll('section');
-  let lastScrollPosition = window.pageYOffset;
   let scrollTimeout;
 
   window.addEventListener('scroll', () => {
+    if (isSnapping) return;
+    
     clearTimeout(scrollTimeout);
     
     scrollTimeout = setTimeout(() => {
@@ -153,15 +195,16 @@ document.addEventListener('DOMContentLoaded', () => {
         const scrollCenter = currentPosition + (windowHeight / 2);
         const distance = Math.abs(scrollCenter - sectionCenter);
         
-        // Only consider sections that are within 150px of current position
         if (distance < closestDistance && distance < 150) {
           closestDistance = distance;
           closestSection = section;
         }
       });
       
-      // If we're close to a section, smoothly snap to center it
-      if (closestSection) {
+      if (closestSection && closestSection !== lastSnappedSection) {
+        isSnapping = true;
+        lastSnappedSection = closestSection;
+        
         const sectionHeight = closestSection.offsetHeight;
         const centerPosition = closestSection.offsetTop - (windowHeight / 2) + (sectionHeight / 2);
         
@@ -171,11 +214,14 @@ document.addEventListener('DOMContentLoaded', () => {
             y: centerPosition,
             autoKill: false
           },
-          ease: 'power2.out'
+          ease: 'power2.out',
+          onComplete: () => {
+            setTimeout(() => {
+              isSnapping = false;
+            }, snapCooldown);
+          }
         });
       }
-      
-      lastScrollPosition = currentPosition;
     }, 150);
   }, { passive: true });
 
@@ -188,10 +234,10 @@ document.addEventListener('DOMContentLoaded', () => {
   }, { passive: true });
 
   document.addEventListener('touchmove', (e) => {
+    if (isSnapping) return;
+    
     touchEndY = e.touches[0].clientY;
     const delta = touchStartY - touchEndY;
-    
-    // Reduce sensitivity for smoother scrolling
     const modified = delta * 0.5;
     
     window.scrollBy({
