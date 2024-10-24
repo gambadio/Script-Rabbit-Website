@@ -4,12 +4,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Script Rabbit - Transform Your Reading Experience</title>
-  <!-- Link to external CSS -->
+  <title>Script Rabbit - AI Document Processing</title>
   <link rel="stylesheet" href="styles.css">
-  <!-- Link to Google Fonts - Now using modern fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <!-- GSAP and Plugins -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollToPlugin.min.js"></script>
@@ -24,104 +21,182 @@
       </div>
       <div class="nav-links">
         <a href="#features">Features</a>
+        <a href="#use-cases">Use Cases</a>
         <a href="#how-it-works">How It Works</a>
-        <a href="#pricing">Pricing</a>
+        <a href="#api">API</a>
+        <a href="#pricing">Buy Now</a>
         <a href="documentation.html">Docs</a>
-        <a href="buy.html" class="cta-button">Book a Demo</a>
+        <a href="#try-demo" class="cta-button">Try Demo</a>
       </div>
     </div>
   </nav>
 
-  <!-- Hero Section with Modern Design -->
+  <!-- Hero Section -->
   <section id="hero" class="section">
+    <div class="gradient-sphere"></div>
     <div class="container">
       <div class="hero-content">
-        <h1>Reading at<br>Rabbit Speed</h1>
-        <p class="hero-subtitle">Transform your learning experience with AI-powered document processing</p>
+        <h1>Transform Documents<br>at Rabbit Speed</h1>
+        <p class="hero-subtitle">Break down complex documents into digestible pieces with our AI-powered assistant</p>
         <div class="cta-group">
-          <a href="buy.html" class="primary-button">Get Started</a>
-          <a href="#features" class="secondary-button">See How It Works</a>
+          <a href="#pricing" class="primary-button">Get Started</a>
+          <a href="#try-demo" class="secondary-button">Try Demo</a>
         </div>
       </div>
       <div class="hero-visual">
-        <div class="gradient-sphere"></div>
-        <img src="images/hero-interface.png" alt="Script Rabbit Interface" class="hero-image">
-      </div>
-    </div>
-    <div class="hero-grid">
-      <div class="grid-item">
-        <span class="stat">500%</span>
-        <span class="stat-desc">Faster Learning</span>
-      </div>
-      <div class="grid-item">
-        <span class="stat">AI</span>
-        <span class="stat-desc">Powered Analysis</span>
-      </div>
-      <div class="grid-item">
-        <span class="stat">24/7</span>
-        <span class="stat-desc">Study Assistant</span>
+        <img src="images/hero-illustration.svg" alt="Document Transformation">
       </div>
     </div>
   </section>
 
-  <!-- Features Section -->
-  <section id="features" class="section">
+  <!-- Benefits Section -->
+  <section id="benefits" class="section">
     <div class="container">
-      <h2>Control the entire process<br>from a single interface.</h2>
-      <div class="features-grid">
-        <div class="feature-card">
-          <div class="feature-icon">
-            <img src="images/split-icon.svg" alt="Split">
-          </div>
-          <h3>Smart Split</h3>
-          <p>Divide documents intelligently based on content structure</p>
+      <div class="section-grid">
+        <div class="benefit-card">
+          <h3>Smart Splitting</h3>
+          <p>Automatically divide documents into manageable chapters</p>
         </div>
-        <div class="feature-card">
-          <div class="feature-icon">
-            <img src="images/process-icon.svg" alt="Process">
-          </div>
-          <h3>AI Process</h3>
-          <p>Transform content into easy-to-digest formats</p>
+        <div class="benefit-card">
+          <h3>AI Processing</h3>
+          <p>Transform content with Claude's intelligence</p>
         </div>
-        <div class="feature-card">
-          <div class="feature-icon">
-            <img src="images/merge-icon.svg" alt="Merge">
-          </div>
-          <h3>Quick Merge</h3>
-          <p>Combine everything into perfect study materials</p>
+        <div class="benefit-card">
+          <h3>Quick Merging</h3>
+          <p>Combine processed content seamlessly</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Process Visualization -->
-  <section id="process" class="section">
+  <!-- Use Cases Section -->
+  <section id="use-cases" class="section dark">
     <div class="container">
-      <h2>Fast, efficient, reliable<br>document processing.</h2>
-      <div class="process-steps">
-        <div class="step">
-          <div class="step-visual">
-            <img src="images/step1.svg" alt="Upload">
-          </div>
-          <span>Upload</span>
+      <h2>For Every Professional</h2>
+      <div class="use-cases-grid">
+        <div class="use-case">
+          <img src="images/student.svg" alt="Student">
+          <h3>Students</h3>
+          <p>Transform textbooks into clear study guides</p>
+          <ul>
+            <li>Break down complex chapters</li>
+            <li>Create concise summaries</li>
+            <li>Generate study materials</li>
+            <li>Extract key concepts</li>
+          </ul>
         </div>
-        <div class="step">
-          <div class="step-visual">
-            <img src="images/step2.svg" alt="Split">
-          </div>
-          <span>Split</span>
+
+        <div class="use-case">
+          <img src="images/lawyer.svg" alt="Lawyer">
+          <h3>Legal Professionals</h3>
+          <p>Process legal documents efficiently</p>
+          <ul>
+            <li>Analyze contracts</li>
+            <li>Extract key provisions</li>
+            <li>Summarize cases</li>
+            <li>Process agreements</li>
+          </ul>
         </div>
-        <div class="step">
-          <div class="step-visual">
-            <img src="images/step3.svg" alt="Process">
-          </div>
-          <span>Process</span>
+
+        <div class="use-case">
+          <img src="images/researcher.svg" alt="Researcher">
+          <h3>Researchers</h3>
+          <p>Break down academic papers effortlessly</p>
+          <ul>
+            <li>Analyze research papers</li>
+            <li>Extract methodologies</li>
+            <li>Summarize findings</li>
+            <li>Process technical content</li>
+          </ul>
         </div>
+
+        <div class="use-case">
+          <img src="images/business.svg" alt="Business">
+          <h3>Business Professionals</h3>
+          <p>Process business documents efficiently</p>
+          <ul>
+            <li>Summarize reports</li>
+            <li>Extract insights</li>
+            <li>Process documentation</li>
+            <li>Create summaries</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works Section -->
+  <section id="how-it-works" class="section">
+    <div class="container">
+      <h2>How It Works</h2>
+      <p class="section-subtitle">Transform documents in three simple steps</p>
+
+      <div class="process-flow">
         <div class="step">
-          <div class="step-visual">
-            <img src="images/step4.svg" alt="Download">
+          <div class="step-number">1</div>
+          <div class="step-content">
+            <h3>Split</h3>
+            <p>Upload and split your document into chapters (up to first 6 chapters shown)</p>
+            <img src="images/split-illustration.svg" alt="Split">
           </div>
-          <span>Download</span>
+        </div>
+
+        <div class="step">
+          <div class="step-number">2</div>
+          <div class="step-content">
+            <h3>Process</h3>
+            <p>Transform content with AI (process up to 3x3 chapters at once)</p>
+            <img src="images/process-illustration.svg" alt="Process">
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-number">3</div>
+          <div class="step-content">
+            <h3>Merge</h3>
+            <p>Combine processed chapters into final document</p>
+            <img src="images/merge-illustration.svg" alt="Merge">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- API Section -->
+  <section id="api" class="section dark">
+    <div class="container">
+      <h2>Bring Your Own API</h2>
+      <p class="section-subtitle">Control costs with your Anthropic Claude API</p>
+      
+      <div class="api-info">
+        <div class="api-card">
+          <h3>Cost Control</h3>
+          <p>Use your own Anthropic Claude API key</p>
+          <ul>
+            <li>Monitor usage directly</li>
+            <li>Set your own limits</li>
+            <li>Pay only for what you process</li>
+          </ul>
+        </div>
+        
+        <div class="api-card">
+          <h3>Easy Setup</h3>
+          <p>One-time API configuration</p>
+          <ul>
+            <li>Secure key storage</li>
+            <li>Simple setup process</li>
+            <li>Clear documentation</li>
+          </ul>
+        </div>
+        
+        <div class="api-card">
+          <h3>Processing Control</h3>
+          <p>Manage your processing approach</p>
+          <ul>
+            <li>Choose batch sizes</li>
+            <li>Set processing limits</li>
+            <li>Control costs directly</li>
+          </ul>
         </div>
       </div>
     </div>
@@ -130,62 +205,95 @@
   <!-- Pricing Section -->
   <section id="pricing" class="section">
     <div class="container">
-      <h2>Choose your plan</h2>
-      <div class="pricing-grid">
-        <div class="price-card">
-          <h3>Basic</h3>
-          <div class="price">$29</div>
-          <ul>
-            <li>Basic document splitting</li>
-            <li>Standard processing</li>
-            <li>PDF export</li>
-            <li>Email support</li>
-          </ul>
-          <a href="buy.html" class="price-button">Get Started</a>
+      <h2>Simple Pricing</h2>
+      <p class="section-subtitle">One-time purchase, bring your own API</p>
+
+      <div class="pricing-card">
+        <div class="price-header">
+          <h3>Script Rabbit Pro</h3>
+          <div class="price">$149</div>
+          <p>One-time payment</p>
         </div>
-        <div class="price-card featured">
-          <div class="featured-tag">Popular</div>
-          <h3>Pro</h3>
-          <div class="price">$49</div>
+
+        <div class="price-features">
+          <h4>Everything included:</h4>
           <ul>
-            <li>Advanced splitting</li>
-            <li>Enhanced AI processing</li>
-            <li>Multiple formats</li>
-            <li>Priority support</li>
+            <li>✓ Document splitting</li>
+            <li>✓ AI processing (requires Claude API)</li>
+            <li>✓ Document merging</li>
+            <li>✓ All templates included</li>
+            <li>✓ Custom templates</li>
+            <li>✓ Batch processing</li>
+            <li>✓ Priority support</li>
           </ul>
-          <a href="buy.html" class="price-button">Get Started</a>
         </div>
-        <div class="price-card">
-          <h3>Enterprise</h3>
-          <div class="price">Custom</div>
+
+        <a href="#buy" class="buy-button">Buy Now</a>
+        <p class="price-note">30-day money-back guarantee</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Try Demo Section -->
+  <section id="try-demo" class="section dark">
+    <div class="container">
+      <h2>Try It Yourself</h2>
+      <p class="section-subtitle">Test with sample documents</p>
+      
+      <div class="demo-container">
+        <div class="demo-limits">
+          <h3>Demo Limitations</h3>
           <ul>
-            <li>Custom solutions</li>
-            <li>API access</li>
-            <li>Dedicated support</li>
-            <li>Volume processing</li>
+            <li>Up to 6 chapters shown when splitting</li>
+            <li>Process up to 3x3 chapters at once</li>
+            <li>Requires Anthropic Claude API key</li>
           </ul>
-          <a href="contact.html" class="price-button">Contact Us</a>
+        </div>
+        <div class="demo-input">
+          <h3>Upload Sample</h3>
+          <p>Choose from samples or upload your own</p>
+          <button class="demo-button">Start Demo</button>
         </div>
       </div>
     </div>
   </section>
 
+  <!-- Footer -->
   <footer>
     <div class="container">
       <div class="footer-content">
-        <div class="footer-logo">
+        <div class="footer-brand">
           <img src="images/rabbit-logo.svg" alt="Script Rabbit">
           <span>Script Rabbit</span>
+          <p>Transform documents at rabbit speed</p>
         </div>
+        
         <div class="footer-links">
-          <a href="#features">Features</a>
-          <a href="#pricing">Pricing</a>
-          <a href="documentation.html">Documentation</a>
-          <a href="mailto:support@scriptrabbit.com">Contact</a>
+          <div class="link-group">
+            <h4>Product</h4>
+            <a href="#features">Features</a>
+            <a href="#use-cases">Use Cases</a>
+            <a href="#pricing">Pricing</a>
+          </div>
+          
+          <div class="link-group">
+            <h4>Resources</h4>
+            <a href="documentation.html">Documentation</a>
+            <a href="#try-demo">Demo</a>
+            <a href="#support">Support</a>
+          </div>
+          
+          <div class="link-group">
+            <h4>Legal</h4>
+            <a href="#about">About</a>
+            <a href="#privacy">Privacy</a>
+            <a href="#terms">Terms</a>
+          </div>
         </div>
       </div>
+      
       <div class="footer-bottom">
-        <p>&copy; 2024 Script Rabbit. All rights reserved.</p>
+        <p>© 2024 Script Rabbit. All rights reserved.</p>
       </div>
     </div>
   </footer>
