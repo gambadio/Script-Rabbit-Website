@@ -18,184 +18,218 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Hero section animations
-  gsap.from('.hero-content h1', {
-    opacity: 0,
-    y: 100,
-    duration: 1,
-    ease: 'power3.out'
-  });
-
-  gsap.from('.hero-content p', {
-    opacity: 0,
-    y: 50,
-    duration: 1,
-    delay: 0.3,
-    ease: 'power3.out'
-  });
-
-  gsap.from('.hero-content .cta-group', {
-    opacity: 0,
-    y: 50,
-    duration: 1,
-    delay: 0.6,
-    ease: 'power3.out'
-  });
-
-  // Gradient sphere parallax effect
-  gsap.to('.gradient-sphere', {
-    scrollTrigger: {
-      trigger: '#hero',
-      start: 'top top',
-      end: 'bottom top',
-      scrub: 1
-    },
-    y: 200,
-    opacity: 0.5
-  });
-
-  // Animate sections on scroll
-  const sections = ['#benefits', '#use-cases', '#how-it-works', '#api', '#pricing', '#try-demo'];
-  
-  sections.forEach(section => {
-    // Heading animations
-    gsap.from(`${section} h2`, {
-      scrollTrigger: {
-        trigger: section,
-        start: 'top 80%',
-      },
+  // Initial animations
+  const initialAnimations = () => {
+    gsap.from('.hero-content h1', {
       opacity: 0,
       y: 50,
       duration: 1,
       ease: 'power3.out'
     });
 
-    // Card animations for different section types
-    const cardSelectors = {
-      '#benefits': '.benefit-card',
-      '#use-cases': '.use-case',
-      '#how-it-works': '.step',
-      '#api': '.api-card',
-      '#pricing': '.pricing-card',
-      '#try-demo': '.demo-limits, .demo-input'
-    };
+    gsap.from('.hero-content p', {
+      opacity: 0,
+      y: 30,
+      duration: 1,
+      delay: 0.2,
+      ease: 'power3.out'
+    });
 
-    if (cardSelectors[section]) {
-      gsap.utils.toArray(`${section} ${cardSelectors[section]}`).forEach((card, i) => {
-        gsap.from(card, {
-          scrollTrigger: {
-            trigger: card,
-            start: 'top 85%',
-          },
-          opacity: 0,
-          y: 50,
-          duration: 0.8,
-          delay: i * 0.1,
-          ease: 'power3.out'
-        });
+    gsap.from('.hero-content .button-group', {
+      opacity: 0,
+      y: 30,
+      duration: 1,
+      delay: 0.4,
+      ease: 'power3.out'
+    });
+  };
+
+  initialAnimations();
+
+  // Section animations
+  const sections = ['#benefits', '#use-cases', '#how-it-works', '#api', '#pricing'];
+  
+  sections.forEach(section => {
+    // Heading animations with refined trigger points
+    gsap.from(`${section} h2`, {
+      scrollTrigger: {
+        trigger: section,
+        start: 'top 80%',
+        once: true
+      },
+      opacity: 0,
+      y: 30,
+      duration: 0.8,
+      ease: 'power2.out'
+    });
+
+    // Card animations
+    const cards = document.querySelectorAll(
+      `${section} .benefit-card, 
+       ${section} .use-case, 
+       ${section} .step, 
+       ${section} .api-card`
+    );
+
+    cards.forEach((card, i) => {
+      gsap.from(card, {
+        scrollTrigger: {
+          trigger: card,
+          start: 'top 85%',
+          once: true
+        },
+        opacity: 0,
+        y: 30,
+        duration: 0.6,
+        delay: i * 0.1,
+        ease: 'power2.out'
       });
-    }
+    });
   });
 
-  // Smooth scroll navigation
+  // Improved smooth scroll navigation
   document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function(e) {
       e.preventDefault();
-      const target = document.querySelector(this.getAttribute('href'));
+      const targetId = this.getAttribute('href');
+      const target = document.querySelector(targetId);
+      
       if (target) {
-        gsap.to(window, {
-          duration: 1,
-          scrollTo: {
-            y: target,
-            offsetY: 100
-          },
-          ease: 'power3.inOut'
-        });
+        // Get target's position
+        const targetPosition = target.getBoundingClientRect().top + window.pageYOffset;
+        const startPosition = window.pageYOffset;
+        const distance = targetPosition - startPosition;
+        
+        // Only scroll smoothly if we're not very close to the target
+        if (Math.abs(distance) > window.innerHeight * 0.3) {
+          gsap.to(window, {
+            duration: 1,
+            scrollTo: {
+              y: targetPosition - 80,
+              autoKill: false
+            },
+            ease: 'power2.inOut'
+          });
+        } else {
+          // If we're close, just jump to the position
+          window.scrollTo({
+            top: targetPosition - 80,
+            behavior: 'smooth'
+          });
+        }
       }
     });
   });
 
-  // Smooth scroll resistance
-  let touchStart = 0;
-  let touchEnd = 0;
-
+  // Smooth scroll resistance with proximity-based snap
+  let isScrolling;
+  let lastScrollTop = window.pageYOffset;
+  const sections = document.querySelectorAll('section');
+  
   window.addEventListener('wheel', (e) => {
-    const delta = e.deltaY;
+    clearTimeout(isScrolling);
+    
+    const currentScroll = window.pageYOffset;
+    const scrollDirection = e.deltaY > 0 ? 1 : -1;
+    
+    // Find the closest section
+    let closestSection = null;
+    let closestDistance = Infinity;
+    
+    sections.forEach(section => {
+      const rect = section.getBoundingClientRect();
+      const distance = Math.abs(rect.top);
+      
+      if (distance < closestDistance) {
+        closestDistance = distance;
+        closestSection = section;
+      }
+    });
+    
+    // If we're very close to a section (within 100px)
+    if (closestDistance < 100) {
+      const targetPosition = closestSection.offsetTop - 80;
+      gsap.to(window, {
+        duration: 0.3,
+        scrollTo: {
+          y: targetPosition,
+          autoKill: false
+        },
+        ease: 'power2.out'
+      });
+    } else {
+      // Normal smooth scroll
+      const delta = e.deltaY * 0.5;
+      gsap.to(window, {
+        duration: 0.5,
+        scrollTo: {
+          y: currentScroll + delta,
+          autoKill: false
+        },
+        ease: 'power2.out'
+      });
+    }
+    
+    lastScrollTop = currentScroll;
+    
+    isScrolling = setTimeout(() => {
+      // After scrolling ends, snap to nearest section if we're close
+      const finalPosition = window.pageYOffset;
+      let closestSection = null;
+      let closestDistance = Infinity;
+      
+      sections.forEach(section => {
+        const distance = Math.abs(section.offsetTop - finalPosition - 80);
+        if (distance < closestDistance && distance < window.innerHeight * 0.2) {
+          closestDistance = distance;
+          closestSection = section;
+        }
+      });
+      
+      if (closestSection) {
+        gsap.to(window, {
+          duration: 0.3,
+          scrollTo: {
+            y: closestSection.offsetTop - 80,
+            autoKill: false
+          },
+          ease: 'power2.out'
+        });
+      }
+    }, 150);
+  }, { passive: true });
+
+  // Touch handling for mobile
+  let touchStartY = 0;
+  let touchEndY = 0;
+
+  document.addEventListener('touchstart', (e) => {
+    touchStartY = e.touches[0].clientY;
+  }, { passive: true });
+
+  document.addEventListener('touchmove', (e) => {
+    touchEndY = e.touches[0].clientY;
+    const delta = touchStartY - touchEndY;
     const modified = delta * 0.5;
     
     gsap.to(window, {
       duration: 0.5,
       scrollTo: {
-        y: window.scrollY + modified,
+        y: window.pageYOffset + modified,
         autoKill: false
       },
       ease: 'power2.out'
     });
-  }, { passive: true });
-
-  // Mobile touch handling
-  window.addEventListener('touchstart', (e) => {
-    touchStart = e.touches[0].clientY;
-  }, { passive: true });
-
-  window.addEventListener('touchmove', (e) => {
-    touchEnd = e.touches[0].clientY;
-    const delta = touchStart - touchEnd;
-    const modified = delta * 0.5;
     
-    gsap.to(window, {
-      duration: 0.5,
-      scrollTo: {
-        y: window.scrollY + modified,
-        autoKill: false
-      },
-      ease: 'power2.out'
-    });
+    touchStartY = touchEndY;
   }, { passive: true });
 
-  // Demo button interactions
-  const demoButton = document.querySelector('.demo-button');
-  if (demoButton) {
-    // Pulse animation
-    gsap.to(demoButton, {
-      scale: 1.05,
-      duration: 1,
-      repeat: -1,
-      yoyo: true,
-      ease: 'power1.inOut'
-    });
-
-    // Click handler
-    demoButton.addEventListener('click', () => {
-      // Add your demo functionality here
-      console.log('Demo button clicked');
-    });
-
-    // Hover effects
-    demoButton.addEventListener('mouseenter', () => {
-      gsap.to(demoButton, {
-        scale: 1.1,
-        duration: 0.3,
-        ease: 'power2.out'
-      });
-    });
-
-    demoButton.addEventListener('mouseleave', () => {
-      gsap.to(demoButton, {
-        scale: 1,
-        duration: 0.3,
-        ease: 'power2.out'
-      });
-    });
-  }
-
-  // Card hover animations
-  const cards = document.querySelectorAll('.benefit-card, .use-case, .api-card, .step');
-  cards.forEach(card => {
+  // Enhanced hover animations
+  document.querySelectorAll('.benefit-card, .use-case, .step, .api-card').forEach(card => {
     card.addEventListener('mouseenter', () => {
       gsap.to(card, {
-        y: -10,
-        duration: 0.3,
+        y: -5,
+        duration: 0.2,
         ease: 'power2.out'
       });
     });
@@ -203,51 +237,22 @@ document.addEventListener('DOMContentLoaded', () => {
     card.addEventListener('mouseleave', () => {
       gsap.to(card, {
         y: 0,
-        duration: 0.3,
+        duration: 0.2,
         ease: 'power2.out'
       });
     });
   });
 
-  // Pricing card special animation
-  const pricingCard = document.querySelector('.pricing-card');
-  if (pricingCard) {
-    pricingCard.addEventListener('mouseenter', () => {
-      gsap.to(pricingCard, {
-        scale: 1.02,
-        duration: 0.3,
-        ease: 'power2.out',
-        boxShadow: '0 20px 40px rgba(0, 0, 0, 0.2)'
-      });
+  // Preload images for smoother experience
+  const preloadImages = () => {
+    document.querySelectorAll('img').forEach(img => {
+      const src = img.getAttribute('src');
+      if (src) {
+        const newImg = new Image();
+        newImg.src = src;
+      }
     });
+  };
 
-    pricingCard.addEventListener('mouseleave', () => {
-      gsap.to(pricingCard, {
-        scale: 1,
-        duration: 0.3,
-        ease: 'power2.out',
-        boxShadow: '0 10px 30px rgba(0, 0, 0, 0.1)'
-      });
-    });
-  }
-
-  // Background gradient animation
-  gsap.to('.gradient-bg', {
-    backgroundPosition: '200% 200%',
-    duration: 20,
-    repeat: -1,
-    ease: 'none'
-  });
-});
-
-// Optional: Preload images for smoother animations
-window.addEventListener('load', () => {
-  const images = document.querySelectorAll('img');
-  images.forEach(img => {
-    const src = img.getAttribute('src');
-    if (src) {
-      const preloadImg = new Image();
-      preloadImg.src = src;
-    }
-  });
+  preloadImages();
 });
