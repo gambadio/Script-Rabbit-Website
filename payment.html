@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Purchase Script Rabbit</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://js.stripe.com/v3/"></script>
+    <style>
+        :root {
+            --dark-bg: #0A0A16;
+            --card-bg: #13131F;
+            --primary: #6366F1;
+            --primary-hover: #818CF8;
+            --text-main: #FFFFFF;
+            --text-secondary: #94A3B8;
+            --gradient-primary: linear-gradient(135deg, #6366F1, #A855F7);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--text-main);
+            line-height: 1.5;
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .payment-container {
+            max-width: 500px;
+            width: 90%;
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .payment-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .payment-header h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .pricing-details {
+            margin: 2rem 0;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 0.5rem;
+        }
+
+        .price-line {
+            display: flex;
+            justify-content: space-between;
+            margin: 0.5rem 0;
+            color: var(--text-secondary);
+        }
+
+        .total-line {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        .features-list {
+            margin: 2rem 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .features-list li {
+            margin: 0.5rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .features-list li::before {
+            content: "✓";
+            color: var(--primary);
+            position: absolute;
+            left: 0;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 0.5rem;
+            color: var(--text-main);
+            font-size: 1rem;
+        }
+
+        #payment-form {
+            margin-top: 2rem;
+        }
+
+        #card-element {
+            background-color: rgba(255, 255, 255, 0.05);
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        #payment-button {
+            width: 100%;
+            padding: 1rem;
+            background: var(--gradient-primary);
+            border: none;
+            border-radius: 0.5rem;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.3s ease;
+        }
+
+        #payment-button:hover {
+            opacity: 0.9;
+        }
+
+        #payment-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .error-message {
+            color: #ef4444;
+            margin-top: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 1rem;
+            height: 1rem;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+            margin-left: 0.5rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .back-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            margin-top: 2rem;
+            display: inline-block;
+            transition: color 0.3s ease;
+        }
+
+        .back-link:hover {
+            color: var(--primary);
+        }
+    </style>
+</head>
+<body>
+    <div class="payment-container">
+        <div class="payment-header">
+            <h1>Script Rabbit Pro</h1>
+            <p>One-time payment, lifetime access</p>
+        </div>
+
+        <div class="pricing-details">
+            <div class="price-line">
+                <span>Script Rabbit Pro</span>
+                <span>$10.00</span>
+            </div>
+            <div class="price-line">
+                <span>VAT (8.1%)</span>
+                <span>$0.81</span>
+            </div>
+            <div class="total-line">
+                <span>Total due today</span>
+                <span>$10.81</span>
+            </div>
+        </div>
+
+        <ul class="features-list">
+            <li>Document splitting</li>
+            <li>AI processing (requires Claude API)</li>
+            <li>Document merging</li>
+            <li>All templates included</li>
+            <li>Custom templates</li>
+            <li>Batch processing</li>
+            <li>Priority support</li>
+            <li>30-day money-back guarantee</li>
+        </ul>
+
+        <form id="payment-form">
+            <div class="form-group">
+                <label class="form-label" for="email">Email</label>
+                <input type="email" id="email" class="form-input" required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Card Details</label>
+                <div id="card-element"></div>
+                <div id="card-errors" class="error-message" role="alert"></div>
+            </div>
+
+            <button id="payment-button" type="submit">
+                Pay $10.81
+                <span class="loading" style="display: none;"></span>
+            </button>
+        </form>
+    </div>
+    <a href="/" class="back-link">← Back to home</a>
+
+    <script>
+        // Initialize Stripe
+        const stripe = Stripe('your_publishable_key');
+        const elements = stripe.elements();
+
+        // Create card Element
+        const card = elements.create('card', {
+            style: {
+                base: {
+                    color: '#fff',
+                    fontFamily: 'Inter, sans-serif',
+                    fontSmoothing: 'antialiased',
+                    fontSize: '16px',
+                    '::placeholder': {
+                        color: '#94A3B8'
+                    }
+                },
+                invalid: {
+                    color: '#ef4444',
+                    iconColor: '#ef4444'
+                }
+            }
+        });
+
+        // Mount card Element
+        card.mount('#card-element');
+
+        // Handle validation errors
+        card.addEventListener('change', function(event) {
+            const displayError = document.getElementById('card-errors');
+            if (event.error) {
+                displayError.textContent = event.error.message;
+            } else {
+                displayError.textContent = '';
+            }
+        });
+
+        // Handle form submission
+        const form = document.getElementById('payment-form');
+        const submitButton = document.getElementById('payment-button');
+        const loadingSpinner = submitButton.querySelector('.loading');
+
+        form.addEventListener('submit', async function(event) {
+            event.preventDefault();
+            
+            // Disable form submission
+            submitButton.disabled = true;
+            loadingSpinner.style.display = 'inline-block';
+
+            const email = document.getElementById('email').value;
+
+            try {
+                // Create payment intent
+                const response = await fetch('/api/create-payment-intent', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        amount: 1081, // $10.81 (including VAT)
+                        currency: 'usd',
+                        email: email
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+
+                // Confirm card payment
+                const result = await stripe.confirmCardPayment(data.clientSecret, {
+                    payment_method: {
+                        card: card,
+                        billing_details: {
+                            email: email
+                        }
+                    }
+                });
+
+                if (result.error) {
+                    throw new Error(result.error.message);
+                }
+
+                // Payment successful
+                window.location.href = '/success';
+
+            } catch (error) {
+                const errorElement = document.getElementById('card-errors');
+                errorElement.textContent = error.message;
+                submitButton.disabled = false;
+                loadingSpinner.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
